@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.TilePane?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="application.controllers.BuyerDashboardController"
+            prefWidth="800" prefHeight="600">
+
+  <top>
+    <HBox alignment="CENTER_LEFT" spacing="10">
+      <padding>
+        <Insets top="10" right="10" bottom="10" left="10"/>
+      </padding>
+      <ImageView fitWidth="40" fitHeight="40">
+        <image>
+          <Image url="@../images/asubooks_logo.png"/>
+        </image>
+      </ImageView>
+      <Label text="ASU Books" style="-fx-font-size: 24px; -fx-font-weight: bold;"/>
+      <Region HBox.hgrow="ALWAYS"/>
+      <Label fx:id="userLabel" style="-fx-font-size: 14px;"/>
+      <Button text="Logout" onAction="#handleLogout"/>
+    </HBox>
+  </top>
+
+
+  <center>
+    <HBox>
+
+
+      <VBox spacing="10">
+        <padding>
+          <Insets top="10" right="10" bottom="10" left="10"/>
+        </padding>
+        <Label text="Filters" style="-fx-font-size: 16px; -fx-font-weight: bold;"/>
+        <CheckBox fx:id="newCheck" text="New"/>
+        <CheckBox fx:id="usedCheck" text="Used"/>
+        <CheckBox fx:id="oldCheck" text="Old"/>
+        <Label text="Category:"/>
+        <ComboBox fx:id="categoryCombo"/>
+        <Button text="Apply Filters" onAction="#applyFilters"/>
+      </VBox>
+
+
+      <ScrollPane fitToWidth="true" fitToHeight="true">
+        <padding>
+          <Insets top="10" right="10" bottom="10" left="10"/>
+        </padding>
+        <content>
+          <TilePane fx:id="booksPane" hgap="10" vgap="10">
+            <padding>
+              <Insets top="10" right="10" bottom="10" left="10"/>
+            </padding>
+          </TilePane>
+        </content>
+      </ScrollPane>
+
+
+      <VBox spacing="10" prefWidth="200">
+        <padding>
+          <Insets top="10" right="10" bottom="10" left="10"/>
+        </padding>
+        <Label text="Order" style="-fx-font-size: 16px; -fx-font-weight: bold;"/>
+        <ListView fx:id="cartList"/>
+        <Button text="Purchase" onAction="#handlePurchase"/>
+      </VBox>
+
+    </HBox>
+  </center>
+</BorderPane>
