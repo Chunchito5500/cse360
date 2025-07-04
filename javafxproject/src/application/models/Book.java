@@ -3,15 +3,15 @@ package application.models;
 import java.time.LocalDate;
 
 public class Book {
-    private String id;
-    private String sellerId;
-    private String title;
-    private String author;
-    private String category;
-    private String condition;
-    private double sellingPrice;
-    private int quantity;
-    private LocalDate dateListed;
+    protected String id;
+    protected String sellerId;
+    protected String title;
+    protected String author;
+    protected String category;
+    protected String condition;
+    protected double sellingPrice;
+    protected int quantity;
+    protected LocalDate dateListed;
 
     /**
      * Constructs a Book object with all required fields.
