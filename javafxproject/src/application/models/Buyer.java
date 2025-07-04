@@ -22,8 +22,8 @@ public class Buyer extends User {
         return cart;
     }
 
-    public String purchase(Book book) {
-        String purchased = "";
-        return purchased;
+    public void purchase(Book book) {
+        addtoCart(book);
+        
     }
 }
