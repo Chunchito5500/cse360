@@ -3,6 +3,7 @@ import java.util.ArrayList;
 public class Buyer extends User {
 
     private ArrayList<Book> cart;
+    private double fee;
 
     public ArrayList<Book> filterBooks(String[] condition, String category) {
         ArrayList<Book> filteredCart = new ArrayList<>();
@@ -24,6 +25,6 @@ public class Buyer extends User {
 
     public void purchase(Book book) {
         addtoCart(book);
-        
+        fee += book.getSellingPrice();
     }
 }
