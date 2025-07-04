@@ -22,7 +22,7 @@ public class Buyer extends User {
         return cart;
     }
 
-    public String purchase() {
+    public String purchase(Book book) {
         String purchased = "";
         return purchased;
     }
