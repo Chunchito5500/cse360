@@ -19,8 +19,10 @@ public class Buyer extends User {
         cart.add(book);
     }
 
-    public ArrayList<Book> viewCart() {
-        return cart;
+    public void viewCart() {
+        for (Book book : cart) {
+            System.out.println("- " + book.getTitle());
+        }
     }
 
     public void purchase(Book book) {
