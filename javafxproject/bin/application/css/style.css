@@ -1,0 +1,30 @@
+#loginRoot {
+  -fx-background-color: linear-gradient(to bottom right, #6A040F, #9D0208);
+  -fx-padding: 40;
+}
+
+#loginRoot .label {
+  -fx-text-fill: #ffffff;
+  -fx-font-family: "Segoe Script", cursive;
+  -fx-font-size: 16px;
+}
+
+#loginRoot .text-field,
+#loginRoot .password-field,
+#loginRoot .combo-box {
+  -fx-background-color: rgba(255,255,255,0.8);
+  -fx-background-radius: 8;
+  -fx-prompt-text-fill: derive(-fx-control-inner-background, -30%);
+  -fx-font-size: 14px;
+}
+
+#loginRoot .button {
+  -fx-background-color: #FAA307;
+  -fx-text-fill: #333333;
+  -fx-font-weight: bold;
+  -fx-background-radius: 20;
+  -fx-padding: 8 20;
+}
+#loginRoot .button:hover {
+  -fx-background-color: #FFBA08;
+}

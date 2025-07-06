@@ -1,0 +1,28 @@
+#signupRoot {
+  -fx-background-color: linear-gradient(to bottom right, #6A040F, #9D0208);
+  -fx-padding: 40;
+}
+
+#signupRoot .label {
+  -fx-text-fill: #ffffff;
+  -fx-font-family: "Arial Rounded MT Bold", sans-serif;
+  -fx-font-size: 14px;
+}
+
+#signupRoot .text-field,
+#signupRoot .password-field,
+#signupRoot .combo-box {
+  -fx-background-color: rgba(255,255,255,0.9);
+  -fx-background-radius: 5;
+  -fx-prompt-text-fill: derive(-fx-background, -30%);
+}
+
+#signupRoot .button {
+  -fx-background-color: #FAA307;
+  -fx-text-fill: #333333;
+  -fx-background-radius: 15;
+  -fx-padding: 8 25;
+}
+#signupRoot .button:hover {
+  -fx-background-color: #FFBA08;
+}

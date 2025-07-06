@@ -13,18 +13,7 @@ public class Book {
     protected int quantity;
     protected LocalDate dateListed;
 
-    /**
-     * Constructs a Book object with all required fields.
-     * @param id            unique book identifier
-     * @param sellerId      ID of the seller
-     * @param title         book title
-     * @param author        book author
-     * @param category      category name
-     * @param condition     condition (New, Used, Old)
-     * @param sellingPrice  price to sell
-     * @param quantity      number of copies available
-     * @param dateListed    date when listed
-     */
+
     public Book(String id,
                 String sellerId,
                 String title,

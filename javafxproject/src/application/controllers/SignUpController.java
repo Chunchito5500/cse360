@@ -2,26 +2,38 @@ package application.controllers;
 
 import application.Main;
 import application.services.AuthenticationService;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.stage.Stage;
-
 import java.io.IOException;
+import java.net.URL;
+
+
 
 public class SignUpController {
-    @FXML private TextField    fullNameField, usernameField;
-    @FXML private PasswordField passwordField, confirmField;
+    @FXML private TextField        fullNameField, usernameField;
+    @FXML private PasswordField    passwordField, confirmField;
     @FXML private ComboBox<String> roleCombo;
-    @FXML private Label         errorLabel;
+    @FXML private Label            errorLabel;
 
     @FXML
     public void initialize() {
         roleCombo.getItems().addAll("Buyer", "Seller");
         roleCombo.getSelectionModel().selectFirst();
+
+        Platform.runLater(() -> {
+            Scene scene = fullNameField.getScene();
+            if (scene != null) {
+            	URL cssUrl = getClass().getResource("/application/css/signup.css");
+                if (cssUrl != null) {
+                    scene.getStylesheets().add(cssUrl.toExternalForm());
+                }
+            }
+        });
     }
 
     @FXML
@@ -32,7 +44,7 @@ public class SignUpController {
         String c    = confirmField.getText();
         String role = roleCombo.getValue();
 
-        if (name.isEmpty()||u.isEmpty()||p.isEmpty()||c.isEmpty()) {
+        if (name.isEmpty() || u.isEmpty() || p.isEmpty() || c.isEmpty()) {
             errorLabel.setText("All fields are required.");
             return;
         }
@@ -47,7 +59,6 @@ public class SignUpController {
             return;
         }
 
-        // back to login
         goToLogin(event);
     }
 
@@ -55,9 +66,14 @@ public class SignUpController {
     private void goToLogin(ActionEvent event) {
         try {
             Parent root = FXMLLoader.load(
-              getClass().getResource("/application/views/LoginPage.fxml"));
-            Stage st = Main.primaryStage;
-            st.setScene(new Scene(root));
+                getClass().getResource("/application/views/LoginPage.fxml")
+            );
+            Scene scene = new Scene(root, 900, 600);
+            URL cssUrl = getClass().getResource("/css/style.css");
+            if (cssUrl != null) {
+                scene.getStylesheets().add(cssUrl.toExternalForm());
+            }
+            Main.primaryStage.setScene(scene);
         } catch (IOException e) {
             e.printStackTrace();
             errorLabel.setText("Cannot return to login.");

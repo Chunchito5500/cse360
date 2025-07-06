@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="application.controllers.BookCardController"
+      fx:id="cardRoot"
+      stylesheets="@../css/bookcard.css"
+      styleClass="book-card"
+      spacing="10" alignment="CENTER"
+      prefWidth="320" prefHeight="180">
+
+    <padding>
+        <Insets top="10" right="10" bottom="10" left="10"/>
+    </padding>
+
+    <Label fx:id="titleLabel"
+           wrapText="true"
+           styleClass="book-title"/>
+
+    <Button fx:id="addButton"
+            text="Add to Cart"
+            styleClass="book-add-btn"/>
+</VBox>

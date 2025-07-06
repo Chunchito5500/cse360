@@ -1,33 +1,31 @@
 package application.models;
+
 import java.util.ArrayList;
+import java.util.List;
+
 
 public class Buyer extends User {
+    private final List<Book> cart = new ArrayList<>();
 
-    private ArrayList<Book> cart;
-    private double fee;
 
-    public ArrayList<Book> filterBooks(String[] condition, String category) {
-        ArrayList<Book> filteredCart = new ArrayList<>();
-        for (Book book : cart) {
-            if((book.getCategory()).equals(condition)) {
-                filteredCart.add(book);
-            }
-        }
-        return filteredCart;
+    public Buyer(String id,
+                 String fullName,
+                 String username,
+                 String passwordHash,
+                 String role) {
+        super(id, fullName, username, passwordHash, role);
     }
+
 
     public void addToCart(Book book) {
         cart.add(book);
     }
 
-    public void viewCart() {
-        for (Book book : cart) {
-            System.out.println("- " + book.getTitle());
-        }
+    public List<Book> getCart() {
+        return cart;
     }
 
-    public void purchase(Book book) {
-        addtoCart(book);
-        fee += book.getSellingPrice();
+    public void clearCart() {
+        cart.clear();
     }
 }

@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml/1"
+            fx:id="adminRoot"
+            fx:controller="application.controllers.AdminDashboardController"
+            prefWidth="1000" prefHeight="600">
+
+
+    <top>
+        <HBox spacing="10" alignment="CENTER_LEFT" stylesheets="@../css/admin.css" styleClass="top-bar">
+            <padding><Insets top="10" right="10" bottom="10" left="10"/></padding>
+            <ImageView fitWidth="40" fitHeight="40">
+                <image><Image url="@../images/library.jpg"/></image>
+            </ImageView>
+            <Label text="ASU Books" styleClass="title"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Label fx:id="userLabel" styleClass="username"/>
+            <Button text="Logout" onAction="#handleLogout"/>
+        </HBox>
+    </top>
+
+
+    <left>
+        <VBox fx:id="modeBox" styleClass="mode-box">
+            <Button fx:id="txnBtn"     text="Transactions" onAction="#showTransactions"/>
+            <Button fx:id="usersBtn"   text="Users"        onAction="#showUsers"/>
+            <Button fx:id="listingBtn" text="Listings"     onAction="#showListings"/>
+        </VBox>
+    </left>
+
+
+    <center>
+        <StackPane>
+            <padding><Insets left="20"/></padding>
+
+            <VBox fx:id="transactionsPane" spacing="8">
+                <HBox spacing="6">
+                    <TextField fx:id="txnSearchField" promptText="Search user or book…" HBox.hgrow="ALWAYS"/>
+                    <Button text="Search" onAction="#handleTxnSearch"/>
+                </HBox>
+
+                <TableView fx:id="txnTable" VBox.vgrow="ALWAYS">
+                    <columns>
+                        <TableColumn fx:id="userCol"   text="User"    prefWidth="120"/>
+                        <TableColumn fx:id="bookCol"   text="Book"    prefWidth="200"/>
+                        <TableColumn fx:id="listedCol" text="Listed"  prefWidth="80"/>
+                        <TableColumn fx:id="boughtCol" text="Bought"  prefWidth="80"/>
+                        <TableColumn fx:id="priceCol"  text="Price"   prefWidth="80"/>
+                        <TableColumn fx:id="timeCol"   text="Time"    prefWidth="180"/>
+                    </columns>
+                </TableView>
+            </VBox>
+
+            <VBox fx:id="userMgmtPane" spacing="8" visible="false" managed="false">
+                <HBox spacing="6">
+                    <TextField fx:id="searchUserField" promptText="Search Users…" HBox.hgrow="ALWAYS"/>
+                    <Button text="Find" onAction="#handleUserSearch"/>
+                </HBox>
+
+                <TableView fx:id="userTable" VBox.vgrow="ALWAYS">
+                    <columns>
+                        <TableColumn fx:id="uUsernameCol" text="Username" prefWidth="150"/>
+                        <TableColumn fx:id="uNameCol"     text="Name"     prefWidth="200"/>
+                        <TableColumn fx:id="uRoleCol"     text="Role"     prefWidth="100"/>
+                    </columns>
+                </TableView>
+            </VBox>
+
+            <ScrollPane fx:id="listingPane" fitToWidth="true"
+                        visible="false" managed="false"
+                        prefViewportHeight="400" prefViewportWidth="640"
+                        styleClass="books-wrapper">
+                <content>
+                    <TilePane fx:id="listingsGrid"
+                              hgap="20" vgap="20"
+                              prefColumns="2"
+                              prefTileWidth="320"
+                              prefTileHeight="180"/>
+                </content>
+            </ScrollPane>
+        </StackPane>
+    </center>
+</BorderPane>

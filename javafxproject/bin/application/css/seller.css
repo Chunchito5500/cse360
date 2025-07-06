@@ -1,0 +1,42 @@
+
+#sellerRoot {
+  -fx-background-color: linear-gradient(to bottom right, #6A040F, #9D0208);
+  -fx-padding: 20;
+}
+
+#sellerRoot .label {
+  -fx-text-fill: white;
+}
+
+#sellerRoot .button {
+  -fx-background-color: #FAA307;
+  -fx-text-fill: #333333;
+  -fx-font-weight: bold;
+  -fx-background-radius: 15;
+  -fx-padding: 6 20;
+}
+#sellerRoot .button:hover {
+  -fx-background-color: #FFBA08;
+}
+
+.list-form {
+  -fx-background-color: rgba(255,255,255,0.15);
+  -fx-background-radius: 8;
+  -fx-padding: 10;
+}
+
+
+#sellerRoot .table-view .column-header-background,
+#sellerRoot .table-view .filler
+{
+    -fx-background-color: #000000;
+}
+
+#sellerRoot .table-view .column-header {
+    -fx-background-color: #000000;
+}
+
+#sellerRoot .table-view .column-header .label {
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+}

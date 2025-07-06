@@ -1,9 +1,12 @@
 package application.controllers;
 
 import application.Main;
+import application.models.AdminLog;
 import application.models.Book;
 import application.services.BookService;
 import application.services.Session;
+import application.utils.CSVUtils;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -11,29 +14,47 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.net.URL;
 import java.time.LocalDate;
-import java.util.*;
+import java.time.LocalDateTime;
+import java.util.Map;
+import java.util.UUID;
 
 public class SellerDashboardController {
-    @FXML private Label userLabel;
-    @FXML private Button listNewBtn;
-    @FXML private VBox   formPane;
-    @FXML private TextField titleField, authorField, yearField, priceField;
-    @FXML private ComboBox<String> categoryCombo, conditionCombo;
-    @FXML private Label suggestedPriceLabel;
-    @FXML private TableView<Book> inventoryTable;
-    @FXML private TableColumn<Book,String> titleCol, categoryCol, conditionCol, dateCol;
-    @FXML private TableColumn<Book,Integer> quantityCol;
-    @FXML private TableColumn<Book,Double> priceCol;
 
-    private ObservableList<Book> inventory = FXCollections.observableArrayList();
-    private Map<String, Double> multiplier = Map.of(
+    @FXML private Label userLabel;
+    @FXML private javafx.scene.control.Button listNewBtn;
+    @FXML private VBox formPane;
+
+    @FXML private TextField titleField;
+    @FXML private TextField authorField;
+    @FXML private TextField yearField;
+    @FXML private TextField priceField;
+    @FXML private ComboBox<String> categoryCombo;
+    @FXML private ComboBox<String> conditionCombo;
+    @FXML private Label suggestedPriceLabel;
+
+    @FXML private TableView<Book> inventoryTable;
+    @FXML private TableColumn<Book, String> titleCol;
+    @FXML private TableColumn<Book, String> categoryCol;
+    @FXML private TableColumn<Book, String> conditionCol;
+    @FXML private TableColumn<Book, Double> priceCol;
+    @FXML private TableColumn<Book, Integer> quantityCol;
+    @FXML private TableColumn<Book, LocalDate> dateCol;
+
+    private final ObservableList<Book> inventory = FXCollections.observableArrayList();
+    private final Map<String, Double> multiplier = Map.of(
         "New", 1.0,
         "Used", 0.8,
         "Old", 0.5
@@ -41,38 +62,44 @@ public class SellerDashboardController {
 
     @FXML
     public void initialize() {
-        // Show logged-in username
-        var user = Session.getCurrentUser();
-        userLabel.setText(user.getUsername());
+    	Platform.runLater(() -> {
+    	    URL css = getClass().getResource("/application/css/seller.css");
+    	    if (css != null) {
+    	        Scene sc = userLabel.getScene();
+    	        if (!sc.getStylesheets().contains(css.toExternalForm()))
+    	            sc.getStylesheets().add(css.toExternalForm());
+    	    }
+    	});
 
-        // Hide form initially
+        userLabel.setText(Session.getCurrentUser().getUsername());
         formPane.setVisible(false);
         formPane.setManaged(false);
 
-        // Populate dropdowns
-        categoryCombo.getItems().addAll(
-          "Computer Science Books","Math Books","English Language Books","Others"
+        categoryCombo.getItems().setAll(
+            "Computer Science Books",
+            "Math Books",
+            "English Language Books",
+            "Others"
         );
         categoryCombo.getSelectionModel().selectFirst();
-        conditionCombo.getItems().addAll("New","Used","Old");
+
+        conditionCombo.getItems().setAll("New", "Used", "Old");
         conditionCombo.getSelectionModel().selectFirst();
 
-        // Set up table columns
-        titleCol   .setCellValueFactory(new PropertyValueFactory<>("title"));
-        categoryCol.setCellValueFactory(new PropertyValueFactory<>("category"));
-        conditionCol.setCellValueFactory(new PropertyValueFactory<>("condition"));
-        priceCol   .setCellValueFactory(new PropertyValueFactory<>("sellingPrice"));
-        dateCol    .setCellValueFactory(new PropertyValueFactory<>("dateListed"));
-        quantityCol.setCellValueFactory(new PropertyValueFactory<>("quantity"));
-        inventoryTable.setItems(inventory);
+        titleCol     .setCellValueFactory(new PropertyValueFactory<>("title"));
+        categoryCol  .setCellValueFactory(new PropertyValueFactory<>("category"));
+        conditionCol .setCellValueFactory(new PropertyValueFactory<>("condition"));
+        priceCol     .setCellValueFactory(new PropertyValueFactory<>("sellingPrice"));
+        quantityCol  .setCellValueFactory(new PropertyValueFactory<>("quantity"));
+        dateCol      .setCellValueFactory(new PropertyValueFactory<>("dateListed"));
 
-        // Load existing seller books
+        inventoryTable.setItems(inventory);
         refreshInventory();
     }
 
     private void refreshInventory() {
         inventory.setAll(
-          BookService.getBooksBySeller(Session.getCurrentUser().getId())
+            BookService.getBooksBySeller(Session.getCurrentUser().getId())
         );
     }
 
@@ -88,11 +115,12 @@ public class SellerDashboardController {
     private void calculatePrice(ActionEvent e) {
         try {
             double orig = Double.parseDouble(priceField.getText());
-            double m   = multiplier.get(conditionCombo.getValue());
+            double m = multiplier.get(conditionCombo.getValue());
             suggestedPriceLabel.setText(String.format("$%.2f", orig * m));
         } catch (NumberFormatException ex) {
-            new Alert(Alert.AlertType.ERROR, 
-              "Enter a valid number for original price", ButtonType.OK).showAndWait();
+            new Alert(Alert.AlertType.ERROR,
+                      "Enter a valid number for original price",
+                      ButtonType.OK).showAndWait();
         }
     }
 
@@ -110,24 +138,38 @@ public class SellerDashboardController {
                 1,
                 LocalDate.now()
             );
-            boolean ok = BookService.addBook(b);
-            if (ok) {
+
+            if (BookService.addBook(b)) {
+                CSVUtils.appendLog(
+                    new AdminLog(
+                        UUID.randomUUID().toString(),
+                        Session.getCurrentUser().getUsername(),
+                        b.getTitle(),
+                        true,
+                        false,
+                        b.getSellingPrice(),
+                        LocalDateTime.now()
+                    ),
+                    "data/logs.csv"
+                );
+
                 new Alert(Alert.AlertType.INFORMATION,
-                          "Book listed successfully!", ButtonType.OK)
-                    .showAndWait();
-                // clear form
+                          "Book listed successfully!",
+                          ButtonType.OK).showAndWait();
+
                 titleField.clear(); authorField.clear();
-                yearField.clear(); priceField.clear();
+                yearField.clear();  priceField.clear();
                 suggestedPriceLabel.setText("$0.00");
-                // refresh table
                 refreshInventory();
             } else {
                 new Alert(Alert.AlertType.ERROR,
-                          "Failed to list book.", ButtonType.OK).showAndWait();
+                          "Failed to list book.",
+                          ButtonType.OK).showAndWait();
             }
         } catch (Exception ex) {
             new Alert(Alert.AlertType.ERROR,
-              "Please fill all fields correctly.", ButtonType.OK).showAndWait();
+                      "Please fill all fields correctly.",
+                      ButtonType.OK).showAndWait();
         }
     }
 
@@ -136,12 +178,15 @@ public class SellerDashboardController {
         Session.clear();
         try {
             Parent root = FXMLLoader.load(
-              getClass().getResource("/application/views/LoginPage.fxml")
+                getClass().getResource("/application/views/LoginPage.fxml")
             );
-            Stage st = Main.primaryStage;
-            st.setScene(new Scene(root, 600, 400));
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
+            Scene scene = new Scene(root, 900, 600);
+
+            URL css = getClass().getResource("/application/css/style.css");
+            if (css != null) scene.getStylesheets().add(css.toExternalForm());
+
+            Main.primaryStage.setScene(scene);
+        } catch (IOException ex) { ex.printStackTrace(); }
+    
     }
 }

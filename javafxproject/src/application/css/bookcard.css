@@ -1,0 +1,25 @@
+.book-card {
+  -fx-background-color: #6B6E7B;
+  -fx-border-width: 2;
+  -fx-border-radius: 5;
+  -fx-background-radius: 5;
+  -fx-padding: 10;
+}
+
+.book-card.new  { -fx-border-color: #4CAF50; }
+.book-card.used { -fx-border-color: #9E9E9E; }
+.book-card.old  { -fx-border-color: #000000; }
+
+.book-title {
+  -fx-text-fill: white;
+  -fx-font-size: 16px;
+  -fx-font-weight: bold;
+}
+
+.book-add-btn {
+  -fx-background-color: #FAA307;
+  -fx-text-fill: #333333;
+  -fx-background-radius: 15;
+  -fx-padding: 6 20;
+}
+.book-add-btn:hover { -fx-background-color: #FFBA08; }

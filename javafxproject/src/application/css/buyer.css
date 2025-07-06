@@ -1,0 +1,50 @@
+#buyerRoot {
+  -fx-background-color: linear-gradient(to bottom right, #6A040F, #9D0208);
+  -fx-padding: 20;
+}
+
+#buyerRoot .label {
+  -fx-text-fill: #FFFFFF;
+  -fx-font-family: "Segoe Script", cursive;
+}
+
+#buyerRoot .check-box {
+  -fx-text-fill: #FFFFFF;
+  -fx-font-size: 14px;
+}
+
+#buyerRoot .combo-box {
+  -fx-background-color: rgba(255,255,255,0.8);
+  -fx-background-radius: 5;
+}
+
+#buyerRoot .button {
+  -fx-background-color: #FAA307;
+  -fx-text-fill: #333333;
+  -fx-font-weight: bold;
+  -fx-background-radius: 10;
+  -fx-padding: 6 16;
+}
+
+#buyerRoot .button:hover {
+  -fx-background-color: #FFBA08;
+}
+
+#buyerRoot .scroll-pane,
+#buyerRoot .tile-pane,
+#buyerRoot .list-view {
+  -fx-background-color: rgba(255,255,255,0.2);
+  -fx-background-radius: 8;
+}
+
+#buyerRoot .tile-pane .vbox {
+  -fx-background-color: rgba(255,255,255,0.1);
+  -fx-border-color: #FFFFFF;
+  -fx-border-radius: 5;
+  -fx-padding: 10;
+}
+
+#buyerRoot .list-view {
+  -fx-control-inner-background: rgba(255,255,255,0.8);
+  -fx-background-radius: 8;
+}

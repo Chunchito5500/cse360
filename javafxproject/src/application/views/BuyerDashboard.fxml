@@ -16,67 +16,70 @@
 
 <BorderPane xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="application.controllers.BuyerDashboardController"
-            prefWidth="800" prefHeight="600">
+            id="buyerRoot"
+            prefWidth="900" prefHeight="600">
 
-  <top>
-    <HBox alignment="CENTER_LEFT" spacing="10">
-      <padding>
-        <Insets top="10" right="10" bottom="10" left="10"/>
-      </padding>
-      <ImageView fitWidth="40" fitHeight="40">
-        <image>
-          <Image url="@../images/asubooks_logo.png"/>
-        </image>
-      </ImageView>
-      <Label text="ASU Books" style="-fx-font-size: 24px; -fx-font-weight: bold;"/>
-      <Region HBox.hgrow="ALWAYS"/>
-      <Label fx:id="userLabel" style="-fx-font-size: 14px;"/>
-      <Button text="Logout" onAction="#handleLogout"/>
-    </HBox>
-  </top>
-
-
-  <center>
-    <HBox>
-
-
-      <VBox spacing="10">
-        <padding>
-          <Insets top="10" right="10" bottom="10" left="10"/>
-        </padding>
-        <Label text="Filters" style="-fx-font-size: 16px; -fx-font-weight: bold;"/>
-        <CheckBox fx:id="newCheck" text="New"/>
-        <CheckBox fx:id="usedCheck" text="Used"/>
-        <CheckBox fx:id="oldCheck" text="Old"/>
-        <Label text="Category:"/>
-        <ComboBox fx:id="categoryCombo"/>
-        <Button text="Apply Filters" onAction="#applyFilters"/>
-      </VBox>
-
-
-      <ScrollPane fitToWidth="true" fitToHeight="true">
-        <padding>
-          <Insets top="10" right="10" bottom="10" left="10"/>
-        </padding>
-        <content>
-          <TilePane fx:id="booksPane" hgap="10" vgap="10">
+    <top>
+        <HBox alignment="CENTER_LEFT" spacing="10">
             <padding>
-              <Insets top="10" right="10" bottom="10" left="10"/>
+                <Insets top="10" right="10" bottom="10" left="10" />
             </padding>
-          </TilePane>
-        </content>
-      </ScrollPane>
+            <ImageView fitWidth="40" fitHeight="40">
+                <image>
+                    <Image url="@../images/library.jpg" />
+                </image>
+            </ImageView>
+            <Label text="ASU Books"
+                   style="-fx-font-size:24px; -fx-font-weight:bold; -fx-text-fill:white;" />
+            <Region HBox.hgrow="ALWAYS" />
+            <Label fx:id="userLabel"
+                   style="-fx-font-size:14px; -fx-text-fill:white;" />
+            <Button text="Logout" onAction="#handleLogout" />
+        </HBox>
+    </top>
+
+    <center>
+        <HBox spacing="10">
 
 
-      <VBox spacing="10" prefWidth="200">
-        <padding>
-          <Insets top="10" right="10" bottom="10" left="10"/>
-        </padding>
-        <Label text="Order" style="-fx-font-size: 16px; -fx-font-weight: bold;"/>
-        <ListView fx:id="cartList"/>
-        <Button text="Purchase" onAction="#handlePurchase"/>
-      </VBox>
+            <VBox spacing="10" prefWidth="200" minWidth="200">
+                <padding>
+                    <Insets top="10" right="10" bottom="10" left="10" />
+                </padding>
+                <Label text="Filters" style="-fx-font-size:16px; -fx-text-fill:white;" />
+                <CheckBox fx:id="newCheck" text="New" />
+                <CheckBox fx:id="usedCheck" text="Used" />
+                <CheckBox fx:id="oldCheck" text="Old" />
+                <Label text="Category:" style="-fx-text-fill:white;" />
+                <ComboBox fx:id="categoryCombo" />
+                <Button text="Apply Filters" onAction="#applyFilters" />
+            </VBox>
 
-    </HBox>
-  </center>
+
+            <ScrollPane fitToWidth="true" fitToHeight="true" HBox.hgrow="ALWAYS">
+                <padding>
+                    <Insets top="10" right="10" bottom="10" left="10" />
+                </padding>
+                <content>
+                    <TilePane fx:id="booksPane"
+                              hgap="20" vgap="20"
+                              prefColumns="2"
+                              prefTileWidth="150"
+                              prefTileHeight="200" />
+                </content>
+            </ScrollPane>
+
+
+            <VBox spacing="10" prefWidth="200" minWidth="200">
+                <padding>
+                    <Insets top="10" right="10" bottom="10" left="10" />
+                </padding>
+                <Label text="Order" style="-fx-font-size:16px; -fx-text-fill:white;" />
+                <ListView fx:id="cartList" prefHeight="200" />
+                <Button text="Purchase" onAction="#handlePurchase" />
+            </VBox>
+
+        </HBox>
+    </center>
+
 </BorderPane>

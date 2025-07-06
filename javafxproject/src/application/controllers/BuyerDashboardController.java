@@ -1,23 +1,32 @@
 package application.controllers;
 
 import application.Main;
+import application.models.AdminLog;
 import application.models.Book;
 import application.services.BookService;
 import application.services.Session;
+import application.utils.CSVUtils;
+import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
-import javafx.scene.layout.*;
-import javafx.stage.Stage;
-import javafx.geometry.Insets;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
+import javafx.scene.layout.TilePane;
+import javafx.scene.layout.VBox;
 
 import java.io.IOException;
-import java.util.ArrayList;
+import java.net.URL;
+import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class BuyerDashboardController {
     @FXML private Label userLabel;
@@ -26,15 +35,13 @@ public class BuyerDashboardController {
     @FXML private TilePane booksPane;
     @FXML private ListView<Book> cartList;
 
-    private List<Book> allBooks = new ArrayList<>();
+    private List<Book> allBooks;
 
     @FXML
     public void initialize() {
-        // Show who’s logged in
         userLabel.setText(Session.getCurrentUser().getUsername());
 
-        // Populate categories
-        categoryCombo.getItems().addAll(
+        categoryCombo.getItems().setAll(
             "All",
             "Computer Science Books",
             "Math Books",
@@ -43,7 +50,6 @@ public class BuyerDashboardController {
         );
         categoryCombo.getSelectionModel().selectFirst();
 
-        // Load & display all books
         allBooks = BookService.getAllBooks();
         showBooks(allBooks);
     }
@@ -51,52 +57,67 @@ public class BuyerDashboardController {
     private void showBooks(List<Book> books) {
         booksPane.getChildren().clear();
         for (Book b : books) {
-            booksPane.getChildren().add(createBookCard(b));
+            try {
+                FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/application/views/BookCard.fxml")
+                );
+                VBox card = loader.load();
+                BookCardController bc = loader.getController();
+
+                bc.init(b, cartList.getItems()::add);
+                booksPane.getChildren().add(card);
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
         }
-    }
-
-    private VBox createBookCard(Book b) {
-        Label title = new Label(b.getTitle());
-        Button addBtn = new Button("Add to Cart");
-        addBtn.setOnAction(e -> cartList.getItems().add(b));
-
-        VBox box = new VBox(5, title, addBtn);
-        box.setPadding(new Insets(5));
-        box.setStyle("-fx-border-color: gray; -fx-border-width: 1;");
-        return box;
     }
 
     @FXML
     private void applyFilters(ActionEvent event) {
         List<Book> filtered = allBooks.stream()
             .filter(book -> {
-                // condition filter
                 boolean condOK =
                     (newCheck.isSelected()  && "New".equals(book.getCondition()))  ||
                     (usedCheck.isSelected() && "Used".equals(book.getCondition())) ||
                     (oldCheck.isSelected()  && "Old".equals(book.getCondition()))  ||
                     (!newCheck.isSelected() && !usedCheck.isSelected() && !oldCheck.isSelected());
-                // category filter
+
                 boolean catOK =
-                    "All".equals(categoryCombo.getValue())
-                 || categoryCombo.getValue().equals(book.getCategory());
+                    "All".equals(categoryCombo.getValue()) ||
+                    categoryCombo.getValue().equals(book.getCategory());
                 return condOK && catOK;
             })
-            .collect(Collectors.toList());
+            .toList();
 
         showBooks(filtered);
     }
 
     @FXML
     private void handlePurchase(ActionEvent event) {
-        List<Book> cart = new ArrayList<>(cartList.getItems());
+        List<Book> cart = List.copyOf(cartList.getItems());
         List<String> outOfStock = BookService.purchaseBooks(cart);
-
         if (!outOfStock.isEmpty()) {
-            showAlert(Alert.AlertType.ERROR,
-                "Out of stock: " + String.join(", ", outOfStock));
+            new Alert(Alert.AlertType.ERROR,
+                      "Out of stock: " + String.join(", ", outOfStock),
+                      ButtonType.OK).showAndWait();
         } else {
-            showAlert(Alert.AlertType.INFORMATION, "Purchase successful!");
+            for (Book b : cart) {
+                CSVUtils.appendLog(
+                    new AdminLog(
+                        java.util.UUID.randomUUID().toString(),
+                        Session.getCurrentUser().getUsername(),
+                        b.getTitle(),
+                        false,
+                        true,
+                        b.getSellingPrice(),
+                        LocalDateTime.now()
+                    ),
+                    "data/logs.csv"
+                );
+            }
+            new Alert(Alert.AlertType.INFORMATION,
+                      "Purchase successful!",
+                      ButtonType.OK).showAndWait();
             cartList.getItems().clear();
             allBooks = BookService.getAllBooks();
             applyFilters(null);
@@ -108,16 +129,14 @@ public class BuyerDashboardController {
         Session.clear();
         try {
             Parent root = FXMLLoader.load(
-              getClass().getResource("/application/views/LoginPage.fxml")
+                getClass().getResource("/application/views/LoginPage.fxml")
             );
-            Stage st = Main.primaryStage;
-            st.setScene(new Scene(root, 600, 400));
+            Scene scene = new Scene(root, 900, 600);
+            URL css = getClass().getResource("/application/css/style.css");
+            if (css != null) scene.getStylesheets().add(css.toExternalForm());
+            Main.primaryStage.setScene(scene);
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    private void showAlert(Alert.AlertType type, String msg) {
-        new Alert(type, msg, ButtonType.OK).showAndWait();
     }
 }
