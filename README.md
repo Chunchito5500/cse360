@@ -1,18 +1,63 @@
-# Project Structure
+# Section Outlines
 
-The code is split into packages:
+### **Login**
+![Login Screenshot](docs/img/login.png)
+
+Log in is simple. If you have an account, use your username and password to sign in.  
+If not, click on **Sign Up** to register.
+
+---
+
+### **Sign Up**
+![SignUp Screenshot](docs/img/signup.png)
+
+Create a new account by entering your name, desired username, password, and role.  
+Admin accounts are pre-configured.
+
+---
+
+### **Buyer Dashboard**
+![Buyer Screenshot](docs/img/buyer.png)
+
+Buyers can browse listings, view details, and purchase books directly from sellers.
+
+---
+
+### **Seller Dashboard**
+![Seller Screenshot](docs/img/seller.png)
+
+Sellers can post books for sale. Just fill in the details and list them.
+
+---
+
+### **Admin Dashboard**  
+Admins have special access to system logs and user/book management. Use:
+
+```
+Username: admin  
+Password: 12345
+```
+
+| Transactions | Users | Listings |
+|--------------|-------|----------|
+| ![Admin Screenshot 1](docs/img/admin.png) | ![Admin Screenshot 2](docs/img/admin2.png) | ![Admin Screenshot 3](docs/img/admin3.png) |
+
+---
+
+
+### Package Descriptions
 
 1. **controllers**  
-   Handles user interactions with the UI—button clicks, scene switches, etc.
+   Responds to user actions like button clicks and scene transitions.
 
 2. **models**  
-   Carries data for each domain object (e.g. User, Book, Transaction).
+   Defines the core data types in the system: `User`, `Book`, `AdminLog`, etc.
 
 3. **services**  
-   Implements how information is stored and retrieved from CSV files.
+   Handles storage and retrieval logic via CSV. Acts as the app’s database layer.
 
 4. **utils**  
-   Parses and formats data for the services (CSV readers/writers, hashing, constants).
+   Provides reusable helpers for CSV parsing, password hashing, and constants.
 
 5. **views**  
-   The frontend of the application—FXML layouts, CSS, and other UI resources.
+   Contains all FXML layouts, stylesheets, and image assets for the UI.
