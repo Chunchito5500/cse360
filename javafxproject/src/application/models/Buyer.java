@@ -1,3 +1,4 @@
+package application.models;
 import java.util.ArrayList;
 
 public class Buyer extends User {
