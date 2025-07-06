@@ -1,7 +1,8 @@
 # Section Outlines
 
 ### **Login**
-![Login Screenshot](docs/img/login.png)
+![image](https://github.com/user-attachments/assets/8fba1c23-df4e-45ed-8593-dc71b299339b)
+
 
 Log in is simple. If you have an account, use your username and password to sign in.  
 If not, click on **Sign Up** to register.
