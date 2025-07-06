@@ -64,15 +64,15 @@ public class SignUpController {
 
     @FXML
     private void goToLogin(ActionEvent event) {
-        try {
+    	try {
             Parent root = FXMLLoader.load(
                 getClass().getResource("/application/views/LoginPage.fxml")
             );
             Scene scene = new Scene(root, 900, 600);
-            URL cssUrl = getClass().getResource("/css/style.css");
-            if (cssUrl != null) {
-                scene.getStylesheets().add(cssUrl.toExternalForm());
-            }
+
+            URL css = getClass().getResource("/application/css/style.css");
+            if (css != null) scene.getStylesheets().add(css.toExternalForm());
+
             Main.primaryStage.setScene(scene);
         } catch (IOException e) {
             e.printStackTrace();
