@@ -10,7 +10,8 @@ If not, click on **Sign Up** to register.
 ---
 
 ### **Sign Up**
-![SignUp Screenshot](docs/img/signup.png)
+![image](https://github.com/user-attachments/assets/de29ed7e-c1ee-4c9c-bf82-657b09c4f175)
+
 
 Create a new account by entering your name, desired username, password, and role.  
 Admin accounts are pre-configured.
@@ -18,14 +19,16 @@ Admin accounts are pre-configured.
 ---
 
 ### **Buyer Dashboard**
-![Buyer Screenshot](docs/img/buyer.png)
+![image](https://github.com/user-attachments/assets/d536fd36-0784-48bf-840e-9a84d2c676a1)
+
 
 Buyers can browse listings, view details, and purchase books directly from sellers.
 
 ---
 
 ### **Seller Dashboard**
-![Seller Screenshot](docs/img/seller.png)
+![image](https://github.com/user-attachments/assets/3b1407ba-f5d3-41cc-ad28-21792ab4a721)
+
 
 Sellers can post books for sale. Just fill in the details and list them.
 
@@ -41,7 +44,10 @@ Password: 12345
 
 | Transactions | Users | Listings |
 |--------------|-------|----------|
-| ![Admin Screenshot 1](docs/img/admin.png) | ![Admin Screenshot 2](docs/img/admin2.png) | ![Admin Screenshot 3](docs/img/admin3.png) |
+| ![image](https://github.com/user-attachments/assets/def3a2b0-10c8-44c3-8b0f-e40ec25dad9e)
+ | ![image](https://github.com/user-attachments/assets/2c4663ad-abe5-4a04-8eb7-eaf0410bc2af)
+ | ![image](https://github.com/user-attachments/assets/1724cccb-7ce4-4218-90b6-0c757732847a)
+ |
 
 ---
 
