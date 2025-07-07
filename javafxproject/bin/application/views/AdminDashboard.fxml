@@ -1,49 +1,46 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
+<?import javafx.scene.chart.*?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
 
-<BorderPane xmlns:fx="http://javafx.com/fxml/1"
+<BorderPane xmlns="http://javafx.com/javafx/8"
+            xmlns:fx="http://javafx.com/fxml/1"
             fx:id="adminRoot"
             fx:controller="application.controllers.AdminDashboardController"
             prefWidth="1000" prefHeight="600">
 
-
     <top>
-        <HBox spacing="10" alignment="CENTER_LEFT" stylesheets="@../css/admin.css" styleClass="top-bar">
+        <HBox spacing="10" alignment="CENTER_LEFT">
             <padding><Insets top="10" right="10" bottom="10" left="10"/></padding>
-            <ImageView fitWidth="40" fitHeight="40">
-                <image><Image url="@../images/library.jpg"/></image>
-            </ImageView>
-            <Label text="ASU Books" styleClass="title"/>
+            <Label text="Admin Panel" styleClass="panel-caption"/>
             <Region HBox.hgrow="ALWAYS"/>
             <Label fx:id="userLabel" styleClass="username"/>
             <Button text="Logout" onAction="#handleLogout"/>
         </HBox>
     </top>
 
-
     <left>
-        <VBox fx:id="modeBox" styleClass="mode-box">
-            <Button fx:id="txnBtn"     text="Transactions" onAction="#showTransactions"/>
-            <Button fx:id="usersBtn"   text="Users"        onAction="#showUsers"/>
-            <Button fx:id="listingBtn" text="Listings"     onAction="#showListings"/>
+        <VBox fx:id="modeBox" spacing="8" styleClass="mode-bar">
+            <padding><Insets top="20" right="0" bottom="0" left="20"/></padding>
+            <Button fx:id="txnBtn"     text="Transactions" onAction="#showTransactions" prefWidth="120"/>
+            <Button fx:id="usersBtn"   text="Users"        onAction="#showUsers"        prefWidth="120"/>
+            <Button fx:id="listingBtn" text="Listings"     onAction="#showListings"     prefWidth="120"/>
+            <Button fx:id="reportsBtn" text="Reports"      onAction="#showReports"      prefWidth="120"/>
         </VBox>
     </left>
 
-
     <center>
-        <StackPane>
-            <padding><Insets left="20"/></padding>
+        <StackPane fx:id="contentStack">
 
-            <VBox fx:id="transactionsPane" spacing="8">
+
+            <VBox fx:id="transactionsPane" spacing="8" visible="false">
                 <HBox spacing="6">
-                    <TextField fx:id="txnSearchField" promptText="Search user or book…" HBox.hgrow="ALWAYS"/>
+                    <TextField fx:id="txnSearchField" promptText="Search…" HBox.hgrow="ALWAYS"/>
                     <Button text="Search" onAction="#handleTxnSearch"/>
                 </HBox>
-
                 <TableView fx:id="txnTable" VBox.vgrow="ALWAYS">
                     <columns>
                         <TableColumn fx:id="userCol"   text="User"    prefWidth="120"/>
@@ -56,12 +53,12 @@
                 </TableView>
             </VBox>
 
-            <VBox fx:id="userMgmtPane" spacing="8" visible="false" managed="false">
+
+            <VBox fx:id="userMgmtPane" spacing="8" visible="false">
                 <HBox spacing="6">
-                    <TextField fx:id="searchUserField" promptText="Search Users…" HBox.hgrow="ALWAYS"/>
+                    <TextField fx:id="searchUserField" promptText="Search users…" HBox.hgrow="ALWAYS"/>
                     <Button text="Find" onAction="#handleUserSearch"/>
                 </HBox>
-
                 <TableView fx:id="userTable" VBox.vgrow="ALWAYS">
                     <columns>
                         <TableColumn fx:id="uUsernameCol" text="Username" prefWidth="150"/>
@@ -71,18 +68,38 @@
                 </TableView>
             </VBox>
 
+
             <ScrollPane fx:id="listingPane" fitToWidth="true"
-                        visible="false" managed="false"
-                        prefViewportHeight="400" prefViewportWidth="640"
-                        styleClass="books-wrapper">
-                <content>
-                    <TilePane fx:id="listingsGrid"
-                              hgap="20" vgap="20"
-                              prefColumns="2"
-                              prefTileWidth="320"
-                              prefTileHeight="180"/>
-                </content>
+                        visible="false" styleClass="books-wrapper">
+                <TilePane fx:id="listingsGrid"
+                          hgap="20" vgap="20"
+                          prefColumns="2" prefTileWidth="320" prefTileHeight="180"/>
             </ScrollPane>
+
+
+            <VBox fx:id="reportsPane" spacing="10" alignment="CENTER"
+                  visible="false">
+                <padding><Insets top="10" right="10" bottom="10" left="10"/></padding>
+                <BarChart fx:id="salesChart" animated="false" legendVisible="false"
+                          prefWidth="600" prefHeight="400">
+                    <xAxis><CategoryAxis fx:id="xAxis" label="Book Title"/></xAxis>
+                    <yAxis><NumberAxis  fx:id="yAxis" label="Sales"/></yAxis>
+                </BarChart>
+            </VBox>
+
         </StackPane>
     </center>
+
+    <bottom>
+        <HBox fx:id="userModifyPane" spacing="12" alignment="CENTER_RIGHT"
+              visible="false">
+            <padding><Insets top="6" right="12" bottom="6" left="12"/></padding>
+            <Label fx:id="selectedUserLabel" text="Select a user…"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Button fx:id="deleteUserBtn"   text="Delete User" onAction="#handleDeleteUser"/>
+            <Button fx:id="toggleRoleBtn"   text="Switch Role" onAction="#handleToggleRole"/>
+            <Button fx:id="clearSelectionBtn" text="Clear"     onAction="#handleClearSelection"/>
+        </HBox>
+    </bottom>
+
 </BorderPane>

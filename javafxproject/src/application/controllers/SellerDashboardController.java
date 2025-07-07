@@ -14,13 +14,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.VBox;
 
@@ -33,9 +27,9 @@ import java.util.UUID;
 
 public class SellerDashboardController {
 
-    @FXML private Label userLabel;
-    @FXML private javafx.scene.control.Button listNewBtn;
-    @FXML private VBox formPane;
+    @FXML private Label   userLabel;
+    @FXML private Button  listNewBtn;
+    @FXML private VBox    formPane;
 
     @FXML private TextField titleField;
     @FXML private TextField authorField;
@@ -43,18 +37,21 @@ public class SellerDashboardController {
     @FXML private TextField priceField;
     @FXML private ComboBox<String> categoryCombo;
     @FXML private ComboBox<String> conditionCombo;
-    @FXML private Label suggestedPriceLabel;
+    @FXML private Label   suggestedPriceLabel;
 
-    @FXML private TableView<Book> inventoryTable;
-    @FXML private TableColumn<Book, String> titleCol;
-    @FXML private TableColumn<Book, String> categoryCol;
-    @FXML private TableColumn<Book, String> conditionCol;
-    @FXML private TableColumn<Book, Double> priceCol;
-    @FXML private TableColumn<Book, Integer> quantityCol;
-    @FXML private TableColumn<Book, LocalDate> dateCol;
+    @FXML private Spinner<Integer> qtySpinner;
+    @FXML private TextArea         descArea;
+
+    @FXML private TableView<Book>            inventoryTable;
+    @FXML private TableColumn<Book,String>   titleCol;
+    @FXML private TableColumn<Book,String>   categoryCol;
+    @FXML private TableColumn<Book,String>   conditionCol;
+    @FXML private TableColumn<Book,Double>   priceCol;
+    @FXML private TableColumn<Book,Integer>  quantityCol;
+    @FXML private TableColumn<Book,LocalDate> dateCol;
 
     private final ObservableList<Book> inventory = FXCollections.observableArrayList();
-    private final Map<String, Double> multiplier = Map.of(
+    private final Map<String,Double> multiplier = Map.of(
         "New", 1.0,
         "Used", 0.8,
         "Old", 0.5
@@ -62,14 +59,15 @@ public class SellerDashboardController {
 
     @FXML
     public void initialize() {
-    	Platform.runLater(() -> {
-    	    URL css = getClass().getResource("/application/css/seller.css");
-    	    if (css != null) {
-    	        Scene sc = userLabel.getScene();
-    	        if (!sc.getStylesheets().contains(css.toExternalForm()))
-    	            sc.getStylesheets().add(css.toExternalForm());
-    	    }
-    	});
+
+        Platform.runLater(() -> {
+            URL css = getClass().getResource("/application/css/seller.css");
+            if (css != null) {
+                var sc = userLabel.getScene();
+                if (!sc.getStylesheets().contains(css.toExternalForm()))
+                    sc.getStylesheets().add(css.toExternalForm());
+            }
+        });
 
         userLabel.setText(Session.getCurrentUser().getUsername());
         formPane.setVisible(false);
@@ -83,36 +81,38 @@ public class SellerDashboardController {
         );
         categoryCombo.getSelectionModel().selectFirst();
 
-        conditionCombo.getItems().setAll("New", "Used", "Old");
+        conditionCombo.getItems().setAll("New","Used","Old");
         conditionCombo.getSelectionModel().selectFirst();
 
-        titleCol     .setCellValueFactory(new PropertyValueFactory<>("title"));
-        categoryCol  .setCellValueFactory(new PropertyValueFactory<>("category"));
-        conditionCol .setCellValueFactory(new PropertyValueFactory<>("condition"));
-        priceCol     .setCellValueFactory(new PropertyValueFactory<>("sellingPrice"));
-        quantityCol  .setCellValueFactory(new PropertyValueFactory<>("quantity"));
-        dateCol      .setCellValueFactory(new PropertyValueFactory<>("dateListed"));
+
+        qtySpinner.setValueFactory(
+            new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 999, 1)
+        );
+
+        titleCol   .setCellValueFactory(new PropertyValueFactory<>("title"));
+        categoryCol.setCellValueFactory(new PropertyValueFactory<>("category"));
+        conditionCol.setCellValueFactory(new PropertyValueFactory<>("condition"));
+        priceCol   .setCellValueFactory(new PropertyValueFactory<>("sellingPrice"));
+        quantityCol.setCellValueFactory(new PropertyValueFactory<>("quantity"));
+        dateCol    .setCellValueFactory(new PropertyValueFactory<>("dateListed"));
 
         inventoryTable.setItems(inventory);
         refreshInventory();
     }
 
     private void refreshInventory() {
-        inventory.setAll(
-            BookService.getBooksBySeller(Session.getCurrentUser().getId())
-        );
+        var books = BookService.getBooksBySeller(Session.getCurrentUser().getId());
+        inventory.setAll(books);
     }
 
-    @FXML
-    private void toggleForm(ActionEvent e) {
-        boolean showing = formPane.isVisible();
-        formPane.setVisible(!showing);
-        formPane.setManaged(!showing);
-        listNewBtn.setText(showing ? "List New Book" : "Hide Form");
+    @FXML private void toggleForm(ActionEvent e) {
+        boolean show = !formPane.isVisible();
+        formPane.setVisible(show);
+        formPane.setManaged(show);
+        listNewBtn.setText(show ? "Hide Form" : "List New Book");
     }
 
-    @FXML
-    private void calculatePrice(ActionEvent e) {
+    @FXML private void calculatePrice(ActionEvent e) {
         try {
             double orig = Double.parseDouble(priceField.getText());
             double m = multiplier.get(conditionCombo.getValue());
@@ -124,9 +124,13 @@ public class SellerDashboardController {
         }
     }
 
-    @FXML
-    private void handleListBook(ActionEvent e) {
+    @FXML private void handleListBook(ActionEvent e) {
         try {
+            int qty = qtySpinner.getValue();
+            double sellPrice = Double.parseDouble(
+                suggestedPriceLabel.getText().replace("$","")
+            );
+
             Book b = new Book(
                 UUID.randomUUID().toString(),
                 Session.getCurrentUser().getId(),
@@ -134,8 +138,9 @@ public class SellerDashboardController {
                 authorField.getText().trim(),
                 categoryCombo.getValue(),
                 conditionCombo.getValue(),
-                Double.parseDouble(suggestedPriceLabel.getText().substring(1)),
-                1,
+                sellPrice,
+                qty,
+                descArea.getText().trim(),
                 LocalDate.now()
             );
 
@@ -145,20 +150,22 @@ public class SellerDashboardController {
                         UUID.randomUUID().toString(),
                         Session.getCurrentUser().getUsername(),
                         b.getTitle(),
-                        true,
-                        false,
+                        true, false,
                         b.getSellingPrice(),
                         LocalDateTime.now()
                     ),
                     "data/logs.csv"
                 );
-
                 new Alert(Alert.AlertType.INFORMATION,
                           "Book listed successfully!",
                           ButtonType.OK).showAndWait();
 
-                titleField.clear(); authorField.clear();
-                yearField.clear();  priceField.clear();
+                titleField.clear();
+                authorField.clear();
+                yearField.clear();
+                priceField.clear();
+                qtySpinner.getValueFactory().setValue(1);
+                descArea.clear();
                 suggestedPriceLabel.setText("$0.00");
                 refreshInventory();
             } else {
@@ -173,20 +180,18 @@ public class SellerDashboardController {
         }
     }
 
-    @FXML
-    private void handleLogout(ActionEvent e) {
+    @FXML private void handleLogout(ActionEvent e) {
         Session.clear();
         try {
             Parent root = FXMLLoader.load(
                 getClass().getResource("/application/views/LoginPage.fxml")
             );
             Scene scene = new Scene(root, 900, 600);
-
             URL css = getClass().getResource("/application/css/style.css");
             if (css != null) scene.getStylesheets().add(css.toExternalForm());
-
             Main.primaryStage.setScene(scene);
-        } catch (IOException ex) { ex.printStackTrace(); }
-    
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
     }
 }

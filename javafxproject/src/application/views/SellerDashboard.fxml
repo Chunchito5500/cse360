@@ -1,67 +1,90 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ComboBox?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.TableColumn?>
-<?import javafx.scene.control.TableView?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.Region?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
 
-<BorderPane fx:id="sellerRoot" id="sellerRoot"
-			xmlns:fx="http://javafx.com/fxml/1"
+<BorderPane xmlns="http://javafx.com/javafx/8"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:id="sellerRoot"
             fx:controller="application.controllers.SellerDashboardController"
-            prefWidth="800" prefHeight="600">
+            prefWidth="900" prefHeight="600">
 
 
   <top>
-    <HBox alignment="CENTER_LEFT" spacing="10">
+    <HBox spacing="10" alignment="CENTER_LEFT">
       <padding><Insets top="10" right="10" bottom="10" left="10"/></padding>
       <ImageView fitWidth="40" fitHeight="40">
         <image><Image url="@../images/asubooks_logo.png"/></image>
       </ImageView>
-      <Label text="ASU Books" style="-fx-font-size:24px; -fx-font-weight:bold;"/>
+      <Label text="ASU Books"
+             style="-fx-font-size:24px; -fx-font-weight:bold;"/>
       <Region HBox.hgrow="ALWAYS"/>
       <Label fx:id="userLabel" style="-fx-font-size:14px;"/>
       <Button text="Logout" onAction="#handleLogout"/>
     </HBox>
   </top>
 
+
   <left>
-    <VBox spacing="10">
+    <VBox spacing="10" prefWidth="300" maxWidth="300">
       <padding><Insets top="10" right="10" bottom="10" left="10"/></padding>
-      <Button fx:id="listNewBtn" text="List New Book" onAction="#toggleForm"/>
-      <VBox fx:id="formPane" visible="false" managed="false" spacing="10">
+      <Button fx:id="listNewBtn"
+              text="List New Book"
+              onAction="#toggleForm"/>
+
+      <VBox fx:id="formPane"
+            spacing="10"
+            visible="false"
+            managed="false">
         <padding><Insets top="10" right="0" bottom="10" left="0"/></padding>
+
+
         <GridPane hgap="10" vgap="10">
-          <Label text="Title:"        GridPane.rowIndex="0" GridPane.columnIndex="0"/>
-          <TextField fx:id="titleField"     GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+          <columnConstraints>
+            <ColumnConstraints halignment="RIGHT" prefWidth="80"/>
+            <ColumnConstraints hgrow="ALWAYS" prefWidth="200"/>
+          </columnConstraints>
 
-          <Label text="Author:"       GridPane.rowIndex="1" GridPane.columnIndex="0"/>
-          <TextField fx:id="authorField"    GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+          <Label text="Title:"       GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+          <TextField fx:id="titleField"
+                     GridPane.rowIndex="0" GridPane.columnIndex="1"/>
 
-          <Label text="Year:"         GridPane.rowIndex="2" GridPane.columnIndex="0"/>
-          <TextField fx:id="yearField"      GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+          <Label text="Author:"      GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+          <TextField fx:id="authorField"
+                     GridPane.rowIndex="1" GridPane.columnIndex="1"/>
 
-          <Label text="Category:"     GridPane.rowIndex="3" GridPane.columnIndex="0"/>
-          <ComboBox fx:id="categoryCombo"   GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+          <Label text="Year:"        GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+          <TextField fx:id="yearField"
+                     GridPane.rowIndex="2" GridPane.columnIndex="1"/>
 
-          <Label text="Condition:"    GridPane.rowIndex="4" GridPane.columnIndex="0"/>
-          <ComboBox fx:id="conditionCombo"  GridPane.rowIndex="4" GridPane.columnIndex="1"/>
+          <Label text="Category:"    GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+          <ComboBox fx:id="categoryCombo"
+                    GridPane.rowIndex="3" GridPane.columnIndex="1"/>
 
-          <Label text="Orig. Price:"   GridPane.rowIndex="5" GridPane.columnIndex="0"/>
-          <TextField fx:id="priceField"     GridPane.rowIndex="5" GridPane.columnIndex="1"/>
+          <Label text="Condition:"   GridPane.rowIndex="4" GridPane.columnIndex="0"/>
+          <ComboBox fx:id="conditionCombo"
+                    GridPane.rowIndex="4" GridPane.columnIndex="1"/>
+
+          <Label text="Orig. Price:" GridPane.rowIndex="5" GridPane.columnIndex="0"/>
+          <TextField fx:id="priceField"
+                     GridPane.rowIndex="5" GridPane.columnIndex="1"/>
+
+          <Label text="Quantity:"    GridPane.rowIndex="6" GridPane.columnIndex="0"/>
+          <Spinner fx:id="qtySpinner"
+                   editable="true"
+                   GridPane.rowIndex="6" GridPane.columnIndex="1"/>
+
+          <Label text="Description:" GridPane.rowIndex="7" GridPane.columnIndex="0"/>
+          <TextArea fx:id="descArea"
+                    prefRowCount="3"
+                    wrapText="true"
+                    GridPane.rowIndex="7" GridPane.columnIndex="1"/>
         </GridPane>
 
         <HBox spacing="10" alignment="CENTER_LEFT">
           <Button text="Calculate Price" onAction="#calculatePrice"/>
-          <Label fx:id="suggestedPriceLabel" text="\\$0.00"/>
+          <Label fx:id="suggestedPriceLabel" text="\$0.00"/>
         </HBox>
 
         <Button text="List My Book" onAction="#handleListBook"/>
@@ -69,10 +92,13 @@
     </VBox>
   </left>
 
+
   <center>
     <VBox>
       <padding><Insets top="10" right="10" bottom="10" left="10"/></padding>
-      <TableView fx:id="inventoryTable" prefWidth="600" prefHeight="400">
+      <TableView fx:id="inventoryTable"
+                 prefWidth="600"
+                 prefHeight="400">
         <columns>
           <TableColumn fx:id="titleCol"     text="Title"       prefWidth="150"/>
           <TableColumn fx:id="categoryCol"  text="Category"    prefWidth="100"/>
